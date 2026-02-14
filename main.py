@@ -1,9 +1,11 @@
 import json
 import os
-from fastapi import FastAPI
+import dotenv
+from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse
 from yt_dlp import YoutubeDL
 
+dotenv.load_dotenv()
 app = FastAPI()
 
 
@@ -22,8 +24,11 @@ def get_video_info(url: str):
 
 
 @app.get("/download")
-def get_video(url: str):
+def get_video(url: str, password: str):
     ydl_opts = {}
+
+    if password != os.environ.get("DOWNLOAD_PASS"):
+        return Response(status_code=401)
 
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
