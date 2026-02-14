@@ -24,7 +24,7 @@ def get_video_info(url: str):
 
 
 @app.get("/download")
-def get_video(url: str, password: str):
+def get_video(url: str, password: str, setfilename: bool = True):
     ydl_opts = {}
 
     if password != os.environ.get("DOWNLOAD_PASS"):
@@ -52,4 +52,4 @@ def get_video(url: str, password: str):
         if not f.endswith(".json") and not os.path.isdir(os.path.join(path, f))
     ][0]
 
-    return FileResponse(os.path.join(path, downloaded_name))
+    return FileResponse(os.path.join(path, downloaded_name), filename=downloaded_name if setfilename else None)
