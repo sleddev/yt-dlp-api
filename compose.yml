@@ -2,8 +2,8 @@ services:
   app:
     build: .
     container_name: fastapi-yt
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     volumes:
       - ./downloads:/app/downloads
     restart: unless-stopped
