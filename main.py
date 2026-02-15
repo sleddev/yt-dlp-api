@@ -25,7 +25,9 @@ def get_video_info(url: str):
 
 @app.get("/download")
 def get_video(url: str, password: str, setfilename: bool = True):
-    ydl_opts = {}
+    ydl_opts = {
+        "cookiefile": "/app/cookies.txt",
+    }
 
     if password != os.environ.get("DOWNLOAD_PASS"):
         return Response(status_code=401)
@@ -36,9 +38,9 @@ def get_video(url: str, password: str, setfilename: bool = True):
         path = os.path.join(os.path.curdir, "downloads", info.get("id"))
         os.makedirs(path, exist_ok=True)
 
-        ydl_opts = {
+        ydl_opts.update({
             "outtmpl": os.path.join(path, "%(title)s.%(ext)s")
-        }
+        })
 
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
