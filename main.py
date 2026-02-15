@@ -6,6 +6,13 @@ from fastapi.responses import FileResponse
 from yt_dlp import YoutubeDL
 
 dotenv.load_dotenv()
+
+cookies_path = os.environ.get("COOKIES_PATH") if os.path.isabs(os.environ.get("COOKIES_PATH")) else os.path.join(os.path.curdir, os.environ.get("COOKIES_PATH"))
+cookies_content = os.environ.get("COOKIES_TXT")
+if cookies_content:
+    with open(cookies_path, "w", encoding="utf-8") as f:
+        f.write(cookies_content)
+
 app = FastAPI()
 
 
@@ -26,7 +33,7 @@ def get_video_info(url: str):
 @app.get("/download")
 def get_video(url: str, password: str, setfilename: bool = True):
     ydl_opts = {
-        "cookiefile": "/app/cookies.txt",
+        "cookiefile": cookies_path,
     }
 
     if password != os.environ.get("DOWNLOAD_PASS"):
