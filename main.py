@@ -38,7 +38,8 @@ def get_video(url: str, password: str, setfilename: bool = True):
         "cookiefile": cookies_path,
         "outtmpl": os.path.join(os.path.curdir, "downloads", "%(id)s", "%(title)s.%(ext)s"),
         "remote_components": ["ejs:github","ejs:npm"],
-        "ffmpeg_location": "/usr/local/bin/ffmpeg"
+        "ffmpeg_location": "/usr/local/bin/ffmpeg",
+        "verbose": True,
     }
 
     if password != os.environ.get("DOWNLOAD_PASS"):
