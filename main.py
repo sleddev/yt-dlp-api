@@ -46,7 +46,8 @@ def get_video(url: str, password: str, setfilename: bool = True):
         os.makedirs(path, exist_ok=True)
 
         ydl_opts.update({
-            "outtmpl": os.path.join(path, "%(title)s.%(ext)s")
+            "outtmpl": os.path.join(path, "%(title)s.%(ext)s"),
+            "format": "bestvideo+bestaudio/best"
         })
 
     with YoutubeDL(ydl_opts) as ydl:
