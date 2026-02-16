@@ -37,7 +37,8 @@ def get_video(url: str, password: str, setfilename: bool = True):
     ydl_opts = {
         "cookiefile": cookies_path,
         "outtmpl": os.path.join(os.path.curdir, "downloads", "%(id)s", "%(title)s.%(ext)s"),
-        "remote_components": ["ejs:github","ejs:npm"]
+        "remote_components": ["ejs:github","ejs:npm"],
+        "js_runtimes": {'deno': {'path': '/root/.deno/bin/deno'}}
     }
 
     if password != os.environ.get("DOWNLOAD_PASS"):
