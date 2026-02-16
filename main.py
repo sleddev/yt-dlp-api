@@ -23,7 +23,9 @@ def ping():
 
 @app.get("/info")
 def get_video_info(url: str):
-    ydl_opts = {}
+    ydl_opts = {
+        "cookiefile": cookies_path,
+    }
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
 
@@ -34,27 +36,21 @@ def get_video_info(url: str):
 def get_video(url: str, password: str, setfilename: bool = True):
     ydl_opts = {
         "cookiefile": cookies_path,
+        "outtmpl": os.path.join(os.path.curdir, "downloads", "%(id)s", "%(title)s.%(ext)s"),
+        "remote_components": ["ejs:github","ejs:npm"]
     }
 
     if password != os.environ.get("DOWNLOAD_PASS"):
         return Response(status_code=401)
 
     with YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
+        info = ydl.extract_info(url, download=True)
+        sanitized = ydl.sanitize_info(info)
 
-        path = os.path.join(os.path.curdir, "downloads", info.get("id"))
-        os.makedirs(path, exist_ok=True)
-
-        ydl_opts.update({
-            "outtmpl": os.path.join(path, "%(title)s.%(ext)s"),
-            "format": "bestvideo+bestaudio/best"
-        })
-
-    with YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+    path = os.path.join(os.path.curdir, "downloads", info.get("id"))
 
     with open(os.path.join(path, "info.json"), "w", encoding="utf8") as f:
-        json.dump(info, f)
+        json.dump(sanitized, f)
 
     files = os.listdir(path)
     downloaded_name = [
