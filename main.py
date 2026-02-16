@@ -40,6 +40,10 @@ def get_video(url: str, password: str, setfilename: bool = True):
         "remote_components": ["ejs:github","ejs:npm"],
         "ffmpeg_location": "/usr/local/bin/ffmpeg",
         "verbose": True,
+        'postprocessors': [{
+            'key': 'FFmpegVideoConvertor',
+            'preferedformat': 'mp4',  # This will convert WebM to MP4 after download
+        }],
     }
 
     if password != os.environ.get("DOWNLOAD_PASS"):
