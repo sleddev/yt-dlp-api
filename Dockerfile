@@ -6,7 +6,15 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends curl unzip xz-utils && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -L https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz -o ffmpeg.tar.xz && \
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+    FFMPEG_URL="https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+    FFMPEG_URL="https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz"; \
+    else \
+    echo "Unsupported architecture: $ARCH" && exit 1; \
+    fi && \
+    curl -L "$FFMPEG_URL" -o ffmpeg.tar.xz && \
     mkdir ffmpeg_temp && \
     tar -xJ -f ffmpeg.tar.xz -C ffmpeg_temp --strip-components=1 && \
     mv ffmpeg_temp/bin/ffmpeg /usr/local/bin/ && \
