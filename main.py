@@ -40,6 +40,7 @@ def get_video(url: str, password: str, setfilename: bool = True):
         "remote_components": ["ejs:github","ejs:npm"],
         "ffmpeg_location": "/usr/local/bin/ffmpeg",
         "verbose": True,
+        'format': 'bestvideo[vcodec^=avc]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best',
         'format_sort': [
             'vcodec:avc',
             'acodec:m4a',
